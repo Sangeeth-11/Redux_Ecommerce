@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { removeFromCart } from '../redux/slices/cartSlice'
+import { emptyCart, removeFromCart } from '../redux/slices/cartSlice'
+import { Link } from 'react-router-dom'
 
 function Cart() {
   const dispatch = useDispatch()
@@ -9,10 +10,10 @@ function Cart() {
   const [products,SetProducts] = useState(0)
   useEffect(()=>{
     const a = cart.reduce((prev,next)=>{return prev+(next.price*next.quantity)},0)
-    const p = cart.reduce((prev,next)=>{return prev+next.quantity},0)
+   
 
     SetAmount(a)
-    SetProducts(p)
+    SetProducts(cart.length)
   },[cart])
   const handleDelete=(id)=>{
     dispatch(removeFromCart(id))
@@ -91,7 +92,10 @@ function Cart() {
                   <li className="d-flex justify-content-between py-3 border-bottom"><strong className="text-muted">Total</strong>
                     <h5 className="font-weight-bold"><strong>${amount}</strong></h5>
                   </li>
-                </ul><button className="btn btn-dark rounded-pill py-2 btn-block">Procceed to checkout</button>
+                </ul>
+                <Link to={'/'}>
+                <button className="btn btn-dark rounded-pill py-2 btn-block" onClick={()=>{dispatch(emptyCart())}}>Procceed to checkout</button>
+                </Link>
               </div>
             </div>
 
