@@ -5,12 +5,14 @@ import { useParams } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
 import { addToWishList } from '../redux/slices/wishlistSlice';
 import { ToastContainer, toast } from 'react-toastify';
+import { addQuantity, addToCart } from '../redux/slices/cartSlice';
 
 function Views() {
   const { id } = useParams()
   const dispatch = useDispatch()
   const { product } = useSelector((state) => state.productReducer)
   const { wishlist } = useSelector((state) => state.wishlistReducer)
+  const {cart} =useSelector(state=>state.cartReducer)
 
 
   useEffect(() => {
@@ -30,6 +32,17 @@ function Views() {
       dispatch(addToWishList(product))
       toast("Added to wishlist")
     }
+  }
+
+  const handleAddCart=(product)=>{
+      const existingproduct = cart.find(item=>item.id==product.id)
+      if (existingproduct) {
+        dispatch(addQuantity(product))
+        toast("Added to cart")
+      } else {
+        dispatch(addToCart(product))
+        toast("Added to cart")
+      }
   }
 
   return (
@@ -54,7 +67,7 @@ function Views() {
                     <i className="fa-solid fa-heart-circle-plus"></i>
                     Add to wishlist
                   </button>&nbsp;
-                  <button className="btn btn-warning flex-shrink-0" type="button">
+                  <button className="btn btn-warning flex-shrink-0" type="button" onClick={()=>{handleAddCart(data)}}>
                     <i className="fa-solid fa-cart-plus"></i>
                     Add to cart
                   </button>
