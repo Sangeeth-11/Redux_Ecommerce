@@ -11,11 +11,19 @@ const productSlice = createSlice({
         product:[],
         productContainer:[],
         loading:false,
-        error:''
+        error:'',
+        productsPerPage:12,
+        currentPage:1
     },
     reducers:{
         searchProduct : (state,action) =>{
             state.product = state.productContainer.filter(item=>item.title.toLowerCase().includes(action.payload))
+        },
+        onNavigatePrev:(state)=>{
+            state.currentPage--
+        },
+        onNavigateNext:(state)=>{
+            state.currentPage++
         }
     },
     extraReducers:(builder)=>{
@@ -36,5 +44,5 @@ const productSlice = createSlice({
     }
 })
 
-export const {searchProduct } = productSlice.actions
+export const {searchProduct ,onNavigatePrev ,onNavigateNext } = productSlice.actions
 export default productSlice.reducer

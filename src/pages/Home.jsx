@@ -3,7 +3,7 @@ import Carousel from 'react-bootstrap/Carousel';
 import { Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProductsThunk } from '../redux/slices/productSlice';
+import { fetchProductsThunk, onNavigateNext, onNavigatePrev } from '../redux/slices/productSlice';
 import Spinner from 'react-bootstrap/Spinner';
 import { addToWishList } from '../redux/slices/wishlistSlice';
 import { toast,ToastContainer } from 'react-toastify';
@@ -13,9 +13,14 @@ import { addToCart } from '../redux/slices/cartSlice';
 function Home() {
 
   const dispatch = useDispatch()
-  const { product, loading, error } = useSelector((state) => state.productReducer)
+  const { product, loading, error ,currentPage , productsPerPage} = useSelector((state) => state.productReducer)
   const { wishlist } = useSelector((state) => state.wishlistReducer)
   console.log(product);
+
+  const totalpages = Math.ceil(product.length/productsPerPage)
+  const indexOfLast = currentPage * productsPerPage
+  const indexOfFirst = indexOfLast - productsPerPage
+  const vaildCards = product.slice(indexOfFirst,indexOfLast)
 
   useEffect(() => {
     dispatch(fetchProductsThunk())
@@ -33,6 +38,17 @@ function Home() {
   const handleAddCart=(product)=>{
     dispatch(addToCart(product))
     toast("Added to cart")
+  }
+
+  const navigateprev=()=>{
+    if (currentPage!=1) {
+      dispatch(onNavigateprev())
+    }
+  }
+  const navigatenext=()=>{
+    if(currentPage!=totalpages){
+      dispatch(onNavigateNext())
+    }
   }
   return (
     <div>
@@ -65,7 +81,7 @@ function Home() {
               <div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 ">
                 {
                   product.length>0?
-                  product?.map(item=>(
+                  vaildCards?.map(item=>(
 
                  
                 <div className="col mb-5">
@@ -95,6 +111,11 @@ function Home() {
                  )):
                  <div className='display-5 '>No Products Found</div>
                 }
+              </div>
+              <div className='text-center'>
+                <button className='btn'><i class="fa-solid fa-angles-left" onClick={()=>{navigateprev()}}></i></button>
+                <span>{currentPage}/{totalpages}</span>
+                <button className='btn'><i class="fa-solid fa-angles-right" onClick={()=>{navigatenext()}}></i></button>
               </div>
             </div>
           </section>
