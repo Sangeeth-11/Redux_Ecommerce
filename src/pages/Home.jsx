@@ -51,15 +51,20 @@ function Home() {
         </Carousel>
       </header>
       {
+        !loading && error &&
+        <div className='display-5 text-danger p-5'>{error}</div>
+      }
+      {
         loading ?
         <div className='p-5 d-flex justify-content-center'>
           <Spinner animation="border" role="status" size='xl' />
         </div>
-          :
+          : !error&&
           <section className="py-3">
             <div className="container-fluid px-4 px-lg-5 mt-5">
               <div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 ">
                 {
+                  product.length>0?
                   product?.map(item=>(
 
                  
@@ -87,7 +92,8 @@ function Home() {
                     </div>
                   </div>
                 </div>
-                 ))
+                 )):
+                 <div className='display-5 '>No Products Found</div>
                 }
               </div>
             </div>

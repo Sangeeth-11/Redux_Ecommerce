@@ -5,16 +5,17 @@ import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { Button } from 'react-bootstrap';
 import Badge from 'react-bootstrap/Badge';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { searchProduct } from '../redux/slices/productSlice';
 
 
 
 function Header() {
     const { wishlist } = useSelector(state => state.wishlistReducer)
     const { cart } = useSelector(state => state.cartReducer)
+    const dispatch = useDispatch()
     return (
         <div>
             <Navbar expand="lg" className="bg-body-tertiary">
@@ -30,6 +31,7 @@ function Header() {
                             <Link to="/cart" className='border border-dark me-3 rounded p-1' style={{ color: 'black', textDecoration: "none" }}><i className="fa-solid fa-cart-plus"></i>Cart <Badge bg="secondary">{cart?.length}</Badge></Link>
                         </Nav>
 
+                    </Navbar.Collapse>
                         <Form inline>
                             <Row>
                                 <Col xs="auto">
@@ -37,14 +39,11 @@ function Header() {
                                         type="text"
                                         placeholder="Search"
                                         className=" mr-sm-2"
+                                        onChange={(e)=>{dispatch(searchProduct(e.target.value.toLowerCase()))}}
                                     />
-                                </Col>
-                                <Col>
-                                    <Button type="submit">Submit</Button>
-                                </Col>
+                                </Col>                      
                             </Row>
                         </Form>
-                    </Navbar.Collapse>
                 </Container>
             </Navbar>
             

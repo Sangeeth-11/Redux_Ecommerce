@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { emptyCart, removeFromCart } from '../redux/slices/cartSlice'
+import { addQuantity, emptyCart, removeFromCart, removeQuantity } from '../redux/slices/cartSlice'
 import { Link } from 'react-router-dom'
 
 function Cart() {
@@ -9,10 +9,8 @@ function Cart() {
   const [amount,SetAmount] = useState(0)
   const [products,SetProducts] = useState(0)
   useEffect(()=>{
-    const a = cart.reduce((prev,next)=>{return prev+(next.price*next.quantity)},0)
-   
-
-    SetAmount(a)
+     
+    SetAmount(cart.reduce((prev,next)=>{return prev+(next.price*next.quantity)},0))
     SetProducts(cart.length)
   },[cart])
   const handleDelete=(id)=>{
@@ -27,7 +25,8 @@ function Cart() {
             {/* cart  */}
             <div className="col-lg-8 p-5 bg-white rounded shadow-sm mb-5">
 
-              
+              {
+                cart.length>0?
               <div className="table-responsive me-2">
                 <table className="table">
                   <thead>
@@ -51,7 +50,7 @@ function Cart() {
                   </thead>
                   <tbody>
                   {
-                cart?.length > 0 ?
+                
                 cart.map(item=>( 
                     <tr>
                       <td className="border-0 align-middle"><strong>{item.id}</strong></td>
@@ -65,15 +64,24 @@ function Cart() {
                         </div>
                       </th>
                       <td className="border-0 align-middle"><strong>${item.price}</strong></td>
-                      <td className="border-0 align-middle text-center"><strong>{item.quantity}</strong></td>
+                      <td className="border-0 align-middle">
+                        <div className='d-flex'>
+
+                      <button className='btn btn-light' onClick={()=>{dispatch(removeQuantity(item))}}>-</button>
+                        <strong className='p-2'>{item.quantity}</strong>
+                     
+                      <button className='btn btn-light' onClick={()=>{dispatch(addQuantity(item))}}>+</button>
+                        </div>
+                      </td>
                       <td className="border-0 align-middle"><i className="fa fa-trash" onClick={()=>{handleDelete(item.id)}}></i></td>
                     </tr>
-                    )):
-                <h2 className='text-center'>cart empty</h2>
+                    ))
                     }
                   </tbody>
                 </table>
-              </div>
+              </div>:
+              <h2>cart empty</h2>
+              }
 
             </div>
 

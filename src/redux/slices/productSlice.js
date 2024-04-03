@@ -9,8 +9,14 @@ const productSlice = createSlice({
     name:'product',
     initialState:{
         product:[],
+        productContainer:[],
         loading:false,
         error:''
+    },
+    reducers:{
+        searchProduct : (state,action) =>{
+            state.product = state.productContainer.filter(item=>item.title.toLowerCase().includes(action.payload))
+        }
     },
     extraReducers:(builder)=>{
         builder.addCase(fetchProductsThunk.pending,(state,action)=>{
@@ -19,14 +25,16 @@ const productSlice = createSlice({
         builder.addCase(fetchProductsThunk.fulfilled,(state,action)=>{
             state.loading=false
             state.product=action.payload
+            state.productContainer=action.payload
         }),
         builder.addCase(fetchProductsThunk.rejected,(state,action)=>{
             state.loading=false
             state.product=[]
-            state.error="cannot fetch products"
+            state.error="Cannot fetch products,Api call failed"
 
         })
     }
 })
 
+export const {searchProduct } = productSlice.actions
 export default productSlice.reducer
