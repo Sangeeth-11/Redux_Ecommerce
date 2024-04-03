@@ -20,6 +20,7 @@ function Wishlist() {
   }
   const handleAddCart=(product)=>{
     dispatch(addToCart(product))
+    dispatch(removeFromWishList(product.id))
     toast("Added to cart")
   }
   return (
