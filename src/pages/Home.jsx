@@ -42,7 +42,7 @@ function Home() {
 
   const navigateprev=()=>{
     if (currentPage!=1) {
-      dispatch(onNavigateprev())
+      dispatch(onNavigatePrev())
     }
   }
   const navigatenext=()=>{
